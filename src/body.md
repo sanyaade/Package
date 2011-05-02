@@ -1,6 +1,18 @@
 # Spark documentation (v3.0.0)
 
-## Introduction
+## Table of contents
+
+ * [Introduction](#introduction)
+ * [Getting the source](#getting-the-source)
+ * [Hello, World!](#hello-world)
+ * [Elements](#elements)
+  * [createElement](#createelement)
+  * [insertElement](#insertelement)
+  * [prependElement](#prependelement)
+  * [appendElement](#appendelement)
+  * [removeElement](#removeelement)
+
+<h2 id='introduction'>Introduction</h2>
 
 Because you have downloaded this then I am assuming you know what Spark is, if not here is a quick overview.
 
@@ -12,7 +24,7 @@ In the next section you will also find links to the source files although you pr
 
 You can find generated documentation online, [here](http://sparkjs.github.com/Spark/), which is generated straight from the repository so it might include things that have not been released yet.
 
-## Getting the source
+<h2 id='getting-the-source'>Getting the source</h2>
 
 So to grab the source files you are going to want to navigate to the folder this file is located in and copy either `spark.js` or `spark.min.js`.
 
@@ -20,7 +32,7 @@ The only difference between them is that one has been minified with the [Google 
 
 Or alternatively you can follow these links to either the [development](spark.js) or [minified](spark.min.js) versions of Spark.
 
-## Hello, World!
+<h2 id='hello-world'>Hello, World!</h2>
 
 You guessed it, we are kicking off with a hello world just to get you used to the syntax of the API.
 
@@ -58,11 +70,11 @@ And DOM manipulation such as animation.
 
 Obviously if you have jQuery etc on your page already then it will not overwrite the $ variable, it will just not use it.
 
-## Elements
+<h2 id='elements'>Elements</h2>
 
 In the previous section I created an element. Now I will explain the five element functions.
 
-### createElement(name, contents, attributes, styles)
+<h3 id='createelement'>createElement(name, contents, attributes, styles)</h3>
 
 This function takes four arguments, the name of the tag, the innerHTML or *contents* of the tag, the attributes to be assigned to it (or false if you want to skip it) and the styles to be assigned to it.
 
@@ -86,7 +98,7 @@ If we wanted to create it with its title set to `Greeting` we would use the foll
         color: '#FF0000'
     });
 
-### insertElement(name, contents, attributes, styles)
+<h3 id='insertelement'>insertElement(name, contents, attributes, styles)</h3>
 
 This takes the same arguments as the previous function but immediately inserts the element into the found elements.
 
@@ -102,15 +114,15 @@ You can also pass a pre created element like so.
     // Insert the element
     $('body').insertElement(myElement);
 
-### prependElement(name, contents, attributes, styles)
+<h3 id='prependelement'>prependElement(name, contents, attributes, styles)</h3>
 
 This works exactly the same as the `insertElement` function. The only difference is that it inserts the element before the found elements.
 
-### appendElement(name, contents, attributes, styles)
+<h3 id='appendelement'>appendElement(name, contents, attributes, styles)</h3>
 
 This works exactly the same as the `insertElement` function. The only difference is that it inserts the element after the found elements.
 
-### removeElement()
+<h3 id='removeelement'>removeElement()</h3>
 
 This removes all found elements. So to remove all paragraph tags with a class of `warning` from the page you would use the following line.
 

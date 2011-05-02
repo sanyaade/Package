@@ -17,16 +17,17 @@
 				font-family: 'Arvo', arial, serif;
 				text-shadow: 1px 1px 0px #ffffff;
 				filter: dropshadow(color=#ffffff, offx=1, offy=1);
+				margin-top: 10px;
 			}
 			
 			h2 {
 				border-top: 4px solid #AAAAAA;
-				padding-top: 10px;
+				padding-top: 30px;
 			}
 			
 			h3 {
 				border-top: 4px solid #ABABAB;
-				padding-top: 10px;
+				padding-top: 30px;
 			}
 			
 			pre {
@@ -49,7 +50,24 @@
 		</style>
 	</head><h1>Spark documentation (v3.0.0)</h1>
 
-<h2>Introduction</h2>
+<h2>Table of contents</h2>
+
+<ul>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#getting-the-source">Getting the source</a></li>
+<li><a href="#hello-world">Hello, World!</a></li>
+<li><a href="#elements">Elements</a>
+
+<ul>
+<li><a href="#createelement">createElement</a></li>
+<li><a href="#insertelement">insertElement</a></li>
+<li><a href="#prependelement">prependElement</a></li>
+<li><a href="#appendelement">appendElement</a></li>
+<li><a href="#removeelement">removeElement</a></li>
+</ul></li>
+</ul>
+
+<h2 id='introduction'>Introduction</h2>
 
 <p>Because you have downloaded this then I am assuming you know what Spark is, if not here is a quick overview.</p>
 
@@ -62,7 +80,7 @@
 
 <p>You can find generated documentation online, <a href="http://sparkjs.github.com/Spark/">here</a>, which is generated straight from the repository so it might include things that have not been released yet.</p>
 
-<h2>Getting the source</h2>
+<h2 id='getting-the-source'>Getting the source</h2>
 
 <p>So to grab the source files you are going to want to navigate to the folder this file is located in and copy either <code>spark.js</code> or <code>spark.min.js</code>.</p>
 
@@ -70,7 +88,7 @@
 
 <p>Or alternatively you can follow these links to either the <a href="spark.js">development</a> or <a href="spark.min.js">minified</a> versions of Spark.</p>
 
-<h2>Hello, World!</h2>
+<h2 id='hello-world'>Hello, World!</h2>
 
 <p>You guessed it, we are kicking off with a hello world just to get you used to the syntax of the API.</p>
 
@@ -113,11 +131,11 @@ Spark('body') // Does not work
 
 <p>Obviously if you have jQuery etc on your page already then it will not overwrite the $ variable, it will just not use it.</p>
 
-<h2>Elements</h2>
+<h2 id='elements'>Elements</h2>
 
 <p>In the previous section I created an element. Now I will explain the five element functions.</p>
 
-<h3>createElement(name, contents, attributes, styles)</h3>
+<h3 id='createelement'>createElement(name, contents, attributes, styles)</h3>
 
 <p>This function takes four arguments, the name of the tag, the innerHTML or <em>contents</em> of the tag, the attributes to be assigned to it (or false if you want to skip it) and the styles to be assigned to it.</p>
 
@@ -144,7 +162,7 @@ Spark('body') // Does not work
 });
 </code></pre>
 
-<h3>insertElement(name, contents, attributes, styles)</h3>
+<h3 id='insertelement'>insertElement(name, contents, attributes, styles)</h3>
 
 <p>This takes the same arguments as the previous function but immediately inserts the element into the found elements.</p>
 
@@ -162,15 +180,15 @@ var myElement = Spark.createElement('p', 'Hello, World!');
 $('body').insertElement(myElement);
 </code></pre>
 
-<h3>prependElement(name, contents, attributes, styles)</h3>
+<h3 id='prependelement'>prependElement(name, contents, attributes, styles)</h3>
 
 <p>This works exactly the same as the <code>insertElement</code> function. The only difference is that it inserts the element before the found elements.</p>
 
-<h3>appendElement(name, contents, attributes, styles)</h3>
+<h3 id='appendelement'>appendElement(name, contents, attributes, styles)</h3>
 
 <p>This works exactly the same as the <code>insertElement</code> function. The only difference is that it inserts the element after the found elements.</p>
 
-<h3>removeElement()</h3>
+<h3 id='removeelement'>removeElement()</h3>
 
 <p>This removes all found elements. So to remove all paragraph tags with a class of <code>warning</code> from the page you would use the following line.</p>
 
