@@ -17,3 +17,41 @@ So to grab the source files you are going to want to navigate to the folder this
 The only difference between them is that one has been minified with the [Google closure compiler](http://code.google.com/closure/compiler/).
 
 Or alternatively you can follow these links to either the [development](spark.js) or [minified](spark.min.js) versions of Spark.
+
+## Hello, World!
+
+You guessed it, we are kicking off with a hello world just to get you used to the syntax of the API.
+
+I have added a file called `template.html` into this folder which you can insert your JavaScript right into.
+
+So first off we are going to need to wait until the DOM is ready before we go messing with it. So we always start off *every* script with the following code.
+
+    Spark.ready(function() {
+        // Your code will go here
+    });
+
+Go ahead and add that into the script tag in the template that says `Your code goes here`.
+
+Now we are going to create and insert a paragraph tag into the DOM with this line.
+
+    $('body').insertElement('p', 'Hello, World!');
+
+Now when you refresh your page **boom!**, the world gets greeted by your page. How sweet.
+
+The selection of elements is a little different to Spark v2.X.X. Now it uses my own selector engine with fully compliant [CSS2 syntax](http://www.w3.org/TR/CSS2/selector.html#pattern-matching) rather than bulky Sizzle which made up half of the file size.
+
+I have also made it so the selection of elements is done via `Spark.find` and `$()` is just a alias for it. Let me show you what I mean.
+
+    $('body'); // Works
+    Spark.find('body'); // Works
+    Spark('body') // Does not work
+
+Although I may add it in the future I think it is good like this. It helps separate logic such as color conversion.
+
+    Spark.color(...);
+
+And DOM manipulation such as animation.
+
+    $('...').animate(...);
+
+Obviously if you have jQuery etc on your page already then it will not overwrite the $ variable, it will just not use it.

@@ -57,5 +57,27 @@
 <p>The only difference between them is that one has been minified with the <a href="http://code.google.com/closure/compiler/">Google closure compiler</a>.</p>
 
 <p>Or alternatively you can follow these links to either the <a href="spark.js">development</a> or <a href="spark.min.js">minified</a> versions of Spark.</p>
+
+<h2>Hello, World!</h2>
+
+<p>You guessed it, we are kicking off with a hello world just to get you used to the syntax of the API.</p>
+
+<p>I have added a file called <code>template.html</code> into this folder which you can insert your JavaScript right into.</p>
+
+<p>So first off we are going to need to wait until the DOM is ready before we go messing with it. So we always start off <em>every</em> script with the following code.</p>
+
+<pre><code>Spark.ready(function() {
+    // Your code will go here
+});
+</code></pre>
+
+<p>Go ahead and add that into the script tag in the template that says <code>Your code goes here</code>.</p>
+
+<p>Now we are going to create and insert a paragraph tag into the DOM with this line.</p>
+
+<pre><code>$('body').insertElement('p', 'Hello, World!');
+</code></pre>
+
+<p>Now when you refresh your page <strong>boom!</strong>, the world gets greeted by your page. How sweet.</p>
 	</body>
 </html>
