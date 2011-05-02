@@ -1,2 +1,3 @@
-# Spark documentation
-## For Spark v3.0.0
+# Spark documentation (v3.0.0)
+
+## Introduction
