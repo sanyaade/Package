@@ -17,7 +17,15 @@
 				font-family: 'Arvo', arial, serif;
 				text-shadow: 1px 1px 0px #ffffff;
 				filter: dropshadow(color=#ffffff, offx=1, offy=1);
+			}
+			
+			h2 {
 				border-top: 4px solid #AAAAAA;
+				padding-top: 10px;
+			}
+			
+			h3 {
+				border-top: 4px solid #ABABAB;
 				padding-top: 10px;
 			}
 			
@@ -35,6 +43,8 @@
 				border: 1px solid #4d4d4d;
 				background-color: #BBBBBB;
 				padding: 3px;
+				-moz-border-radius: 5px;
+				border-radius: 5px;
 			}
 		</style>
 	</head><h1>Spark documentation (v3.0.0)</h1>
@@ -49,6 +59,8 @@
 <p>Got it? Good. So in this document, which was lovingly coded by the developer of Spark (<a href="http://flowdev.co.uk/">Oliver Caldwell</a>), you will find a step by step guide of how to use the library.</p>
 
 <p>In the next section you will also find links to the source files although you probably saw them on your way in. The source files are <code>spark.js</code> and <code>spark.min.js</code> from this folder.</p>
+
+<p>You can find generated documentation online, <a href="http://sparkjs.github.com/Spark/">here</a>, which is generated straight from the repository so it might include things that have not been released yet.</p>
 
 <h2>Getting the source</h2>
 
@@ -79,5 +91,90 @@
 </code></pre>
 
 <p>Now when you refresh your page <strong>boom!</strong>, the world gets greeted by your page. How sweet.</p>
+
+<p>The selection of elements is a little different to Spark v2.X.X. Now it uses my own selector engine with fully compliant <a href="http://www.w3.org/TR/CSS2/selector.html#pattern-matching">CSS2 syntax</a> rather than bulky Sizzle which made up half of the file size.</p>
+
+<p>I have also made it so the selection of elements is done via <code>Spark.find</code> and <code>$()</code> is just a alias for it. Let me show you what I mean.</p>
+
+<pre><code>$('body'); // Works
+Spark.find('body'); // Works
+Spark('body') // Does not work
+</code></pre>
+
+<p>Although I may add it in the future I think it is good like this. It helps separate logic such as color conversion.</p>
+
+<pre><code>Spark.color(...);
+</code></pre>
+
+<p>And DOM manipulation such as animation.</p>
+
+<pre><code>$('...').animate(...);
+</code></pre>
+
+<p>Obviously if you have jQuery etc on your page already then it will not overwrite the $ variable, it will just not use it.</p>
+
+<h2>Elements</h2>
+
+<p>In the previous section I created an element. Now I will explain the five element functions.</p>
+
+<h3>createElement(name, contents, attributes, styles)</h3>
+
+<p>This function takes four arguments, the name of the tag, the innerHTML or <em>contents</em> of the tag, the attributes to be assigned to it (or false if you want to skip it) and the styles to be assigned to it.</p>
+
+<p>It will return the finished element.</p>
+
+<p>The following script will create a paragraph tag with <code>Hello, World!</code> as its contents.</p>
+
+<pre><code>var myElement = Spark.createElement('p', 'Hello, World!');
+</code></pre>
+
+<p>Now if we want to make it red, we pass false for the attributes because we are not setting any, and an object with <code>color: '#FF0000'</code> inside it.</p>
+
+<pre><code>var myElement = Spark.createElement('p', 'Hello, World!', false, {
+    color: '#FF0000'
+});
+</code></pre>
+
+<p>If we wanted to create it with its title set to <code>Greeting</code> we would use the following.</p>
+
+<pre><code>var myElement = Spark.createElement('p', 'Hello, World!', {
+    title: 'Greeting'
+}, {
+    color: '#FF0000'
+});
+</code></pre>
+
+<h3>insertElement(name, contents, attributes, styles)</h3>
+
+<p>This takes the same arguments as the previous function but immediately inserts the element into the found elements.</p>
+
+<p>This is what we used for the <code>Hello, World!</code> example.</p>
+
+<pre><code>$('body').insertElement('p', 'Hello, World!');
+</code></pre>
+
+<p>You can also pass a pre created element like so.</p>
+
+<pre><code>// Create the element
+var myElement = Spark.createElement('p', 'Hello, World!');
+
+// Insert the element
+$('body').insertElement(myElement);
+</code></pre>
+
+<h3>prependElement(name, contents, attributes, styles)</h3>
+
+<p>This works exactly the same as the <code>insertElement</code> function. The only difference is that it inserts the element before the found elements.</p>
+
+<h3>appendElement(name, contents, attributes, styles)</h3>
+
+<p>This works exactly the same as the <code>insertElement</code> function. The only difference is that it inserts the element after the found elements.</p>
+
+<h3>removeElement()</h3>
+
+<p>This removes all found elements. So to remove all paragraph tags with a class of <code>warning</code> from the page you would use the following line.</p>
+
+<pre><code>$('p.warning').removeElement();
+</code></pre>
 	</body>
 </html>

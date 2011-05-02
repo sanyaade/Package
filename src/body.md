@@ -10,6 +10,8 @@ Got it? Good. So in this document, which was lovingly coded by the developer of 
 
 In the next section you will also find links to the source files although you probably saw them on your way in. The source files are `spark.js` and `spark.min.js` from this folder.
 
+You can find generated documentation online, [here](http://sparkjs.github.com/Spark/), which is generated straight from the repository so it might include things that have not been released yet.
+
 ## Getting the source
 
 So to grab the source files you are going to want to navigate to the folder this file is located in and copy either `spark.js` or `spark.min.js`.
@@ -55,3 +57,61 @@ And DOM manipulation such as animation.
     $('...').animate(...);
 
 Obviously if you have jQuery etc on your page already then it will not overwrite the $ variable, it will just not use it.
+
+## Elements
+
+In the previous section I created an element. Now I will explain the five element functions.
+
+### createElement(name, contents, attributes, styles)
+
+This function takes four arguments, the name of the tag, the innerHTML or *contents* of the tag, the attributes to be assigned to it (or false if you want to skip it) and the styles to be assigned to it.
+
+It will return the finished element.
+
+The following script will create a paragraph tag with `Hello, World!` as its contents.
+
+    var myElement = Spark.createElement('p', 'Hello, World!');
+
+Now if we want to make it red, we pass false for the attributes because we are not setting any, and an object with `color: '#FF0000'` inside it.
+
+    var myElement = Spark.createElement('p', 'Hello, World!', false, {
+        color: '#FF0000'
+    });
+
+If we wanted to create it with its title set to `Greeting` we would use the following.
+
+    var myElement = Spark.createElement('p', 'Hello, World!', {
+        title: 'Greeting'
+    }, {
+        color: '#FF0000'
+    });
+
+### insertElement(name, contents, attributes, styles)
+
+This takes the same arguments as the previous function but immediately inserts the element into the found elements.
+
+This is what we used for the `Hello, World!` example.
+
+    $('body').insertElement('p', 'Hello, World!');
+
+You can also pass a pre created element like so.
+
+    // Create the element
+    var myElement = Spark.createElement('p', 'Hello, World!');
+    
+    // Insert the element
+    $('body').insertElement(myElement);
+
+### prependElement(name, contents, attributes, styles)
+
+This works exactly the same as the `insertElement` function. The only difference is that it inserts the element before the found elements.
+
+### appendElement(name, contents, attributes, styles)
+
+This works exactly the same as the `insertElement` function. The only difference is that it inserts the element after the found elements.
+
+### removeElement()
+
+This removes all found elements. So to remove all paragraph tags with a class of `warning` from the page you would use the following line.
+
+    $('p.warning').removeElement();
