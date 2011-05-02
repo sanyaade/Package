@@ -9,3 +9,11 @@ Because you have downloaded this then I am assuming you know what Spark is, if n
 Got it? Good. So in this document, which was lovingly coded by the developer of Spark ([Oliver Caldwell](http://flowdev.co.uk/)), you will find a step by step guide of how to use the library.
 
 In the next section you will also find links to the source files although you probably saw them on your way in. The source files are `spark.js` and `spark.min.js` from this folder.
+
+## Getting the source
+
+So to grab the source files you are going to want to navigate to the folder this file is located in and copy either `spark.js` or `spark.min.js`.
+
+The only difference between them is that one has been minified with the [Google closure compiler](http://code.google.com/closure/compiler/).
+
+Or alternatively you can follow these links to either the [development](spark.js) or [minified](spark.min.js) versions of Spark.
