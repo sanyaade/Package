@@ -4,6 +4,7 @@
 
  * [Introduction](#introduction)
  * [Getting the source](#getting-the-source)
+ * [Compatibility](#compatibility)
  * [Hello, World!](#hello-world)
  * [Elements](#elements)
   * [createElement](#createelement)
