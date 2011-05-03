@@ -100,18 +100,18 @@ Spark.extend('ready', function(fn) {
 	}
 });
 /**
- * The AJAX object contains three functions, `get`, `post` and `getJSON`.
+ * The net object contains three functions, `get`, `post` and `getJSON`.
  * You can call these functions like so.
  * 
- *     Spark.ajax.get('foo.json');
- *     Spark.ajax.post('foo.json');
- *     Spark.ajax.getJSON('foo.json', 'handlerFunction'); // Works cross domain (can retreve tweets etc)
+ *     Spark.net.get('foo.json');
+ *     Spark.net.post('foo.json');
+ *     Spark.net.getJSON('foo.json', 'handlerFunction'); // Works cross domain (can retrieve tweets etc)
  * 
  * The above examples are synchronous requests, to perform an asynchronous request you must pass a callback, like so. This does not apply to the `getJSON` method. This must always have a callback for the data to be passed to.
  * 
  * Do not make the mistake of passing a function. This must be a string and represent the functions name. Not the function its self.
  * 
- *     Spark.ajax.post('foo.json', false, function(data) {
+ *     Spark.net.post('foo.json', false, function(data) {
  *         console.log(data);
  *     });
  * 
@@ -119,7 +119,7 @@ Spark.extend('ready', function(fn) {
  * 
  * The second argument is for the parameters, if false no parameters will be sent. Here is an example of getting a file asynchronously with a parameter and a check to make sure the request worked.
  * 
- *     Spark.ajax.get('foo.json', {
+ *     Spark.net.get('foo.json', {
  *         foo: 'bar'
  *     }, function(data) {
  *         if(data) {
@@ -132,16 +132,18 @@ Spark.extend('ready', function(fn) {
  * 
  * In the `getJSON` method, these arguments are reversed, you must pass a callback and then an optional parameters object.
  * 
- *     Spark.ajax.getJSON('http://api.twitter.com/1/statuses/user_timeline.json', 'handle', {
+ *     Spark.net.getJSON('http://api.twitter.com/1/statuses/user_timeline.json', 'handle', {
  *         screen_name: 'SparkJavaScript',
  *         count: '5'
  *     });
  * 
  * The code above would pull the latest five tweets from Spark's twitter account and pass them in an object to a function called `handle`.
+ * 
+ * If the API requires the callback name be specified in a different value, then you can pass false for the callback name and specify the callback name in the parameters section.
  */
 
 /** @private */
-Spark.extend('ajax', {
+Spark.extend('net', {
 	/**
 	 * Selects what AJAX object to use
 	 * 
@@ -308,9 +310,17 @@ Spark.extend('ajax', {
 		if(parameters) {
 			params = this.buildParameterString(parameters);
 		}
+		else {
+			params = '';
+		}
+		
+		// Add the question mark if required
+		if(callback || params) {
+			file += '?';
+		}
 		
 		// Load the file
-		this.instance.load(file + '?callback=' + callback + ((params) ? '&' + params : ''));
+		this.instance.load(file + ((callback) ? 'callback=' + callback + '&' : '') + params);
 	}
 });
 /**
