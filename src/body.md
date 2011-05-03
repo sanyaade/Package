@@ -16,6 +16,9 @@
   * [show](#show)
   * [hide](#hide)
  * [Classes](#classes)
+  * [hasClass](#hasclass)
+  * [addClass](#addclass)
+  * [removeClass](#removeclass)
 
 <h2 id='introduction'>Introduction</h2>
 
@@ -226,3 +229,21 @@ This function works exactly the same as `show`, so you can use the examples abov
 <h2 id='classes'>Classes</h2>
 
 You can add, remove and check for classes on elements with the following three functions.
+
+<h3 id='hasclass'>hasClass(classname)</h3>
+
+This will return true or false depending on if the found element has the specified class assigned to it. Take this paragraph tag for example.
+
+    <p id='toCheck' class='red'></p>
+
+Lets check if it has the class `red`.
+
+    $('p#toCheck').hasClass('red'); // Returns true
+
+Lets check if it has the class `blue`.
+
+    $('p#toCheck').hasClass('blue'); // Returns false
+
+<h3 id='addclass'>addClass(classname)</h3>
+
+<h3 id='removeclass'>removeClass(classname)</h3>
