@@ -12,6 +12,9 @@
   * [prependElement](#prependelement)
   * [appendElement](#appendelement)
   * [removeElement](#removeelement)
+ * [Visibility](#visibility)
+  * [show](#show)
+  * [hide](#hide)
 
 <h2 id='introduction'>Introduction</h2>
 
@@ -140,3 +143,60 @@ This works exactly the same as the `insertElement` function. The only difference
 This removes all found elements. So to remove all paragraph tags with a class of `warning` from the page you would use the following line.
 
     $('p.warning').removeElement();
+
+<h2 id='visibility'>Visibility</h2>
+
+Using the `show` and `hide` functions you can...show and hide elements. You can also specify transitions to use.
+
+The default transition names are as follows.
+
+ * fade
+ * slide
+ * smooth
+
+You can add more by adding a transition function to `Spark.transitions.show` and `Spark.transitions.hide`.
+
+You must add one for showing the element and one for hiding it. If not, then users can only go one way with your transition and will have to use another for the reverse.
+
+Here is the source for the fade transitions as an example.
+
+    Spark.transitions.show.fade = function(element, callback) {
+        // Show the element and grab its opacity
+        var original = element.show().style('opacity');
+        
+        // Set the opacity to 0 and fade its opacity to its original
+        element.style('opacity', 0).animate({
+            opacity: original
+        }, false, false, function() {
+            // Run the callback if there is one
+            if(callback) {
+                callback();
+            }
+        });
+    };
+    
+    Spark.transitions.hide.fade = function(element, callback) {
+        // Grab its opacity
+        var original = element.style('opacity');
+        
+        // Fade the opacity to 0, set it back to its original
+        element.animate({
+            opacity: 0
+        }, false, false, function() {
+            // Hide it
+            element.style('opacity', original).hide();
+            
+            // Run the callback if there is one
+            if(callback) {
+                callback();
+            }
+        });
+    };
+
+<h3 id='show'>show(transition, callback)</h3>
+
+Shows all found elements, if a transition is specified then it will be shown with that transition. If a callback has been passed then it will be run at the end of the transition.
+
+<h3 id='hide'>hide(transition, callback)</h3>
+
+Hides all found elements, if a transition is specified then it will be hidden with that transition. If a callback has been passed then it will be run at the end of the transition.
