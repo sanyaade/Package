@@ -32,6 +32,18 @@ The only difference between them is that one has been minified with the [Google 
 
 Or alternatively you can follow these links to either the [development](spark.js) or [minified](spark.min.js) versions of Spark.
 
+<h2 id='compatibility'>Compatibility</h2>
+
+Spark works perfectly in the following browsers. I am sure it works perfectly in many more, I just can't test them all.
+
+ * Chrome
+ * Firefox
+ * Safari
+ * Opera
+ * IE6 to IE9
+
+It almost works perfectly in IE5. That's right, **IE5**. The only thing that does not work are asynchronous AJAX calls.
+
 <h2 id='hello-world'>Hello, World!</h2>
 
 You guessed it, we are kicking off with a hello world just to get you used to the syntax of the API.
