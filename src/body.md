@@ -90,7 +90,7 @@ Obviously if you have jQuery etc on your page already then it will not overwrite
 
 In the previous section I created an element. Now I will explain the five element functions.
 
-<h3 id='createelement'>createElement(name, contents, attributes, styles)</h3>
+<h3 id='createelement'>createElement(name, [contents], [attributes], [styles])</h3>
 
 This function takes four arguments, the name of the tag, the innerHTML or *contents* of the tag, the attributes to be assigned to it (or false if you want to skip it) and the styles to be assigned to it.
 
@@ -114,7 +114,7 @@ If we wanted to create it with its title set to `Greeting` we would use the foll
         color: '#FF0000'
     });
 
-<h3 id='insertelement'>insertElement(name, contents, attributes, styles)</h3>
+<h3 id='insertelement'>insertElement(name, [contents], [attributes], [styles])</h3>
 
 This takes the same arguments as the previous function but immediately inserts the element into the found elements.
 
@@ -130,11 +130,11 @@ You can also pass a pre created element like so.
     // Insert the element
     $('body').insertElement(myElement);
 
-<h3 id='prependelement'>prependElement(name, contents, attributes, styles)</h3>
+<h3 id='prependelement'>prependElement(name, [contents], [attributes], [styles])</h3>
 
 This works exactly the same as the `insertElement` function. The only difference is that it inserts the element before the found elements.
 
-<h3 id='appendelement'>appendElement(name, contents, attributes, styles)</h3>
+<h3 id='appendelement'>appendElement(name, [contents], [attributes], [styles])</h3>
 
 This works exactly the same as the `insertElement` function. The only difference is that it inserts the element after the found elements.
 
@@ -193,10 +193,10 @@ Here is the source for the fade transitions as an example.
         });
     };
 
-<h3 id='show'>show(transition, callback)</h3>
+<h3 id='show'>show([transition], [callback])</h3>
 
 Shows all found elements, if a transition is specified then it will be shown with that transition. If a callback has been passed then it will be run at the end of the transition.
 
-<h3 id='hide'>hide(transition, callback)</h3>
+<h3 id='hide'>hide([transition], [callback])</h3>
 
 Hides all found elements, if a transition is specified then it will be hidden with that transition. If a callback has been passed then it will be run at the end of the transition.
