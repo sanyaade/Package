@@ -246,4 +246,16 @@ Lets check if it has the class `blue`.
 
 <h3 id='addclass'>addClass(classname)</h3>
 
+This adds the specified class to the element.
+
+The following example would add a class of `blue` to the paragraph tag from the previous example.
+
+    $('p#toCheck').addClass('blue');
+
 <h3 id='removeclass'>removeClass(classname)</h3>
+
+This removes the specified class from the element.
+
+The following example would remove the `error` class from all div tags on the page.
+
+    $('div').removeClass('error');
