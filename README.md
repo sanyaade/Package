@@ -6,4 +6,4 @@ It is advised you open the file `documentation.html` and read through to learn h
 
 To build the package you will need [redcarpet](https://github.com/tanoku/redcarpet) installed to parse the markdown. If you have it, simply run `make`.
 
-The built package is called `Package.zip`.
+The built package is called `Spark.zip`.

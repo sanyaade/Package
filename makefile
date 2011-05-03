@@ -4,5 +4,5 @@ default:
 	@@echo 'Combining files...'
 	@@cat src/header.html src/body.html src/footer.html > documentation.html
 	@@echo 'Packaging...'
-	@@zip -q Package.zip documentation.html template.html spark.js spark.min.js plugins/*
+	@@zip -q Spark.zip documentation.html template.html spark.js spark.min.js plugins/*
 	@@echo 'Done!'
