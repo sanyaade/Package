@@ -219,6 +219,10 @@ Finally, if you specify a callback, then it will be run when the transition comp
 
 Hides all found elements, if a transition is specified then it will be hidden with that transition. If a callback has been passed then it will be run at the end of the transition.
 
+This function works exactly the same as `show`, so you can use the examples above, just use hide instead of show. Like so.
+
+    $('p.coffee').hide();
+
 <h2 id='classes'>Classes</h2>
 
 You can add, remove and check for classes on elements with the following three functions.
