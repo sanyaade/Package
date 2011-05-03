@@ -15,6 +15,7 @@
  * [Visibility](#visibility)
   * [show](#show)
   * [hide](#hide)
+ * [Classes](#classes)
 
 <h2 id='introduction'>Introduction</h2>
 
@@ -197,6 +198,27 @@ Here is the source for the fade transitions as an example.
 
 Shows all found elements, if a transition is specified then it will be shown with that transition. If a callback has been passed then it will be run at the end of the transition.
 
+To show every paragraph tag on the page with a class of `coffee` you would use the following line.
+
+    $('p.coffee').show();
+    
+    // Or this way if you want, it makes no difference
+    Spark.find('p.coffee').show();
+
+Then if you specify a transition such as fade, it will fade it.
+
+    $('p.coffee').show('fade');
+
+Finally, if you specify a callback, then it will be run when the transition completes. This will only work if the transition has implemented callbacks, all of the default ones have.
+
+    $('p.coffee').show('fade', function() {
+        alert('The coffee is done! :D');
+    });
+
 <h3 id='hide'>hide([transition], [callback])</h3>
 
 Hides all found elements, if a transition is specified then it will be hidden with that transition. If a callback has been passed then it will be run at the end of the transition.
+
+<h2 id='classes'>Classes</h2>
+
+You can add, remove and check for classes on elements with the following three functions.
