@@ -1408,7 +1408,12 @@ Spark.extend('style', function(name, value) {
 		nameTest = new RegExp('(^|\\s)' + name + '($|\\s)', 'i');
 		
 		// Assign px to the value if required
-		value = (typeof value === 'number' && !nameTest.test(pxNames)) ? value + 'px' : value;
+		if(typeof value === 'number' && !nameTest.test(pxNames)) {
+			value = value + 'px';
+		}
+		else if(typeof value === 'number') {
+			value = value.toString();
+		}
 		
 		// Work around for scroll position
 		if(name === 'scrollTop' || name === 'scrollLeft') {
@@ -1669,12 +1674,41 @@ Spark.extend('json', {
  * 
  *     $('div.focus').hasClass('focus');
  * 
- * @param {String} name The class name you want to search for
+ * You can also pass an array instead and all of the class names in the array will be checked for.
+ * 
+ * All class names must be found for it to return true
+ * 
+ * @param {String|Array} name The class name you want to search for or an array of class names. If you pass an array, all will have to match
  * @returns {Boolean} Will return true if it has the class or false if it does not
  */
 Spark.extend('hasClass', function(name) {
-	// Check for the class
-	return new RegExp('\\b' + name + '\\b').test(this[0].className);
+	// Initialise any required variables
+	var e = this[0],
+		found = true,
+		element = this.find(e),
+		type = null;
+	
+	// Get the type
+	type = element.attribute('class') ? 'class' : 'className';
+	
+	// Check if name is an array
+	if(name instanceof Array) {
+		// Loop over the array
+		this.each(function(n) {
+			// Check for the class
+			if(!new RegExp('(^|\\s)' + n + '($|\\s)').test(element.attribute(type))) {
+				// If not found set found to false
+				found = false;
+			}
+		}, name);
+		
+		// Return found
+		return found;
+	}
+	else {
+		// Check for the class
+		return new RegExp('(^|\\s)' + name + '($|\\s)').test(element.attribute(type));
+	}
 });
 /**
  * Add a class to the specified elements
@@ -1683,23 +1717,43 @@ Spark.extend('hasClass', function(name) {
  * 
  *     $('h1').addClass('border');
  * 
- * @param {String} name The class name you want to add
+ * You can also pass an array instead and all of the class names in the array will be added.
+ * 
+ * @param {String|Array} name The class name you want to add or an array of class names
  * @returns {Object} Returns the Spark object for chaining
  */
 Spark.extend('addClass', function(name) {
 	// Initialise any required variables
 	var c = null,
-		that = this;
+		that = this,
+		element = null,
+		type = null;
 	
 	// Loop through all the elements
 	this.each(function(e) {
-		// Check if it already has the class
-		if(!that.find(e).hasClass(name)) {
-			// Grab the class
-			c = that.find(e).attribute('class');
-			
-			// It doesnt, add it and trim off whitespace
-			e.className = ((c) ? c + ' ' + name : name).replace(/^\s+|\s+$/i, '');
+		// Get the element
+		element = that.find(e);
+		
+		// Check if name is an array
+		if(name instanceof Array) {
+			// Loop over the array
+			that.each(function(n) {
+				// Rerun the function
+				element.addClass(n);
+			}, name);
+		}
+		else {
+			// Check if it already has the class
+			if(!that.find(e).hasClass(name)) {
+				// Get the type
+				type = element.attribute('class') ? 'class' : 'className';
+				
+				// Grab the class
+				c = element.attribute(type);
+				
+				// It doesnt, add it and trim off whitespace
+				element.attribute(type, ((c) ? c + ' ' + name : name).replace(/^\s+|\s+$/i, ''));
+			}
 		}
 	});
 	
@@ -1713,14 +1767,38 @@ Spark.extend('addClass', function(name) {
  * 
  *     $('h1').removeClass('border');
  * 
+ * You can also pass an array instead and all of the class names in the array will be removed.
+ * 
  * @param {String} name The class name you want to remove
+ * @param {String|Array} name The class name you want to remove or an array of class names
  * @returns {Object} Returns the Spark object for chaining
  */
 Spark.extend('removeClass', function(name) {
+	// Put this in scope
+	var that = this,
+		type = null,
+		element = null;
+	
 	// Loop through all the elements
 	this.each(function(e) {
-		// Remove the class
-		e.className = e.className.replace(new RegExp('(^|\\s)' + name + '($|\\s)'), '');
+		// Get the element
+		element = that.find(e);
+		
+		// Get the type
+		type = element.attribute('class') ? 'class' : 'className';
+		
+		// Check if name is an array
+		if(name instanceof Array) {
+			// Loop over the array
+			that.each(function(n) {
+				// Remove the class
+				element.attribute(type, element.attribute(type).replace(new RegExp('(^|\\s)' + n + '($|\\s)'), ''));
+			}, name);
+		}
+		else {
+			// Remove the class
+			element.attribute(type, element.attribute(type).replace(new RegExp('(^|\\s)' + name + '($|\\s)'), ''));
+		}
 	});
 	
 	// Return the Spark object for chaining
@@ -2504,6 +2582,11 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
 				
 				// Loop through the animations
 				that.each(function(to, name) {
+					// If to is a function, run it
+					if(typeof to === 'function') {
+						to = to();
+					}
+					
 					// Get the unit
 					if(typeof to === 'string') {
 						unit = to.replace(notUnit, '');
@@ -2615,17 +2698,21 @@ Spark.extend('animate', function(animations, timeframe, easing, callback) {
  * 
  * You can also pass a function as the second argument to be run when the transition completes, like so
  * 
- *     $('p').hide('fade', function() {
+ *     $('p').hide('fade', false, false, function() {
  *         alert('done');
  *     });
+ * 
+ * The two middle arguments are timeframe and easing. This works exactly the same as the animate function.
  * 
  * This function takes the originial display type into account.
  * 
  * @param {String} transition Optional name of the transition to use to hide. Default transitions are: fade, slide and smooth
+ * @param {Number|Boolean} timeframe How many milliseconds you wish the transition to take, pass false to default to 600
+ * @param {String|Boolean} easing The easing method to use either in, out or inOut followed by one of the following: Quad, Cubic, Quart, Quint, Sine, Expo, Circ, Elastic, Back or Bounce, pass false to default to outQuad. You can also use linear
  * @param {Function} callback Optional function to be run after the transition completes
  * @returns {Object} Returns the Spark object for chaining
  */
-Spark.extend('hide', function(transition, callback) {
+Spark.extend('hide', function(transition, timeframe, easing, callback) {
 	// Initialise any required variables
 	var that = this;
 	
@@ -2637,7 +2724,10 @@ Spark.extend('hide', function(transition, callback) {
 			// Loop through all of the elements
 			this.each(function(e) {
 				// Run the transition
-				that.transitions.hide[transition](that.find(e), callback);
+				that.transitions.hide[transition](that.find(e), timeframe, easing, callback);
+				
+				// Now remove the callback so it is only called once
+				callback = false;
 			});
 		}
 		else {
@@ -2672,17 +2762,21 @@ Spark.extend('hide', function(transition, callback) {
  * 
  * You can also pass a function as the second argument to be run when the transition completes, like so
  * 
- *     $('p').show('fade', function() {
+ *     $('p').show('fade', false, false, function() {
  *         alert('done');
  *     });
+ * 
+ * The two middle arguments are timeframe and easing. This works exactly the same as the animate function.
  * 
  * This function takes the originial display type into account.
  * 
  * @param {String} transition Optional name of the transition to use to show. Default transitions are: fade, slide and smooth
+ * @param {Number|Boolean} timeframe How many milliseconds you wish the transition to take, pass false to default to 600
+ * @param {String|Boolean} easing The easing method to use either in, out or inOut followed by one of the following: Quad, Cubic, Quart, Quint, Sine, Expo, Circ, Elastic, Back or Bounce, pass false to default to outQuad. You can also use linear
  * @param {Function} callback Optional function to be run after the transition completes
  * @returns {Object} Returns the Spark object for chaining
  */
-Spark.extend('show', function(transition, callback) {
+Spark.extend('show', function(transition, timeframe, easing, callback) {
 	// Initialise any required variables
 	var that = this;
 	
@@ -2694,7 +2788,10 @@ Spark.extend('show', function(transition, callback) {
 			// Loop through all of the elements
 			this.each(function(e) {
 				// Run the transition
-				that.transitions.show[transition](that.find(e), callback);
+				that.transitions.show[transition](that.find(e), timeframe, easing, callback);
+				
+				// Now remove the callback so it is only called once
+				callback = false;
 			});
 		}
 		else {
@@ -2707,7 +2804,7 @@ Spark.extend('show', function(transition, callback) {
 		// Loop through all the elements
 		this.each(function(e) {
 			// Show the element with the correct display type
-			that.find(e).style('display', that.find(e).data('SparkDisplayType'));
+			that.find(e).style('display', that.find(e).data('SparkDisplayType') || 'block');
 		});
 	}
 	
@@ -3052,9 +3149,27 @@ Spark.extend('stop', function() {
  * 
  *     $('p').toggle();
  * 
+ * To fade the elements in, you would specify the fade transition as the optional argument
+ * 
+ *     $('p').show('fade');
+ * 
+ * You can also pass a function as the second argument to be run when the transition completes, like so
+ * 
+ *     $('p').toggle('fade', false, false, function() {
+ *         alert('done');
+ *     });
+ * 
+ * The two middle arguments are timeframe and easing. This works exactly the same as the animate function.
+ * 
+ * This function takes the original display type into account.
+ * 
+ * @param {String} transition Optional name of the transition to use to toggle. Default transitions are: fade, slide and smooth
+ * @param {Number|Boolean} timeframe How many milliseconds you wish the transition to take, pass false to default to 600
+ * @param {String|Boolean} easing The easing method to use either in, out or inOut followed by one of the following: Quad, Cubic, Quart, Quint, Sine, Expo, Circ, Elastic, Back or Bounce, pass false to default to outQuad. You can also use linear
+ * @param {Function} callback Optional function to be run after the transition completes
  * @returns {Object} Returns the Spark object for chaining
  */
-Spark.extend('toggle', function() {
+Spark.extend('toggle', function(transition, timeframe, easing, callback) {
 	// Initialise any required variables
 	var that = this,
 		element = null;
@@ -3064,15 +3179,18 @@ Spark.extend('toggle', function() {
 		// Grab the element
 		element = that.find(e);
 		
-		// Check wether it is display none or not
+		// Check whether it is display none or not
 		if(element.style('display') === 'none') {
 			// It is, show it
-			element.show();
+			element.show(transition, timeframe, easing, callback);
 		}
 		else {
 			// It is not, hide it
-			element.hide();
+			element.hide(transition, timeframe, easing, callback);
 		}
+		
+		// Now remove the callback so it is only called once
+		callback = false;
 	});
 	
 	// Return the Spark object
@@ -3095,33 +3213,53 @@ Spark.extend('toggle', function() {
  */
 Spark.extend('transitions', {
 	show: {
-		fade: function(element, callback) {
-			// Show the element and grab its opacity
-			var original = element.show().style('opacity');
+		fade: function(element, timeframe, easing, callback) {
+			// Initialise any required variables
+			var original = null;
 			
-			// Set the opacity to 0 and fade its opacity to its original
-			element.style('opacity', 0).animate({
-				opacity: original
-			}, false, false, function() {
+			// Fade its opacity to its original
+			element.animate({
+				opacity: function() {
+				// Show the element and grab its opacity
+				original =  element.show().style('opacity');
+				
+				// Set its opacity to 0
+				element.style('opacity', 0);
+				
+				// Return the original
+				return original;
+				}
+			}, timeframe, easing, function() {
 				// Run the callback if there is one
 				if(callback) {
 					callback();
 				}
 			});
 		},
-		slide: function(element, callback) {
-			// Show the element and grab its height
-			var originalHeight = element.show().style('height'),
-				// Grab its overflow and default to visible
-				originalOverflow = element.style('overflow') || 'visible';
+		slide: function(element, timeframe, easing, callback) {
+			// Initialise any required variables
+			var originalHeight = null,
+				originalOverflow = null;
 			
 			// Set the height to 0 and the overflow to hidden and then slide it to its original
-			element.style({
-				height: 0,
-				overflow: 'hidden'
-			}).animate({
-				height: originalHeight
-			}, false, false, function() {
+			element.animate({
+				height: function() {
+					// Show the element and get its height
+					originalHeight = element.show().style('height');
+					
+					// Grab its overflow and default to visible
+					originalOverflow = element.style('overflow') || 'visible';
+					
+					// Set height to 0 and overflow to hidden
+					element.style({
+						height: 0,
+						overflow: 'hidden'
+					});
+					
+					// Slide height to its original
+					return originalHeight;
+				}
+			}, timeframe, easing, function() {
 				// Set the overflow to its original
 				element.style('overflow', originalOverflow);
 				
@@ -3131,27 +3269,46 @@ Spark.extend('transitions', {
 				}
 			});
 		},
-		smooth: function(element, callback) {
-			// Show the element and grab its height
-			var originalHeight = element.show().style('height'),
-				// Grab its width
-				originalWidth = element.style('width'),
-				// Grab its opacity
-				originalOpacity = element.style('opacity'),
-				// Grab its overflow and default to visible
-				originalOverflow = element.style('overflow') || 'visible';
+		smooth: function(element, timeframe, easing, callback) {
+			// Initialise any required variables
+			var originalHeight = null,
+				originalWidth = null,
+				originalOpacity = null,
+				originalOverflow = null;
 			
 			// Set the height, width and opacity to 0. Set the overflow to hidden and then animate everything to its original values
-			element.style({
-				height: 0,
-				width: 0,
-				opacity: 0,
-				overflow: 'hidden'
-			}).animate({
-				height: originalHeight,
-				width: originalWidth,
-				opacity: originalOpacity
-			}, false, false, function() {
+			element.animate({
+				height: function() {
+					// Show the element and grab its height
+					originalHeight = element.show().style('height');
+					
+					// Grab its width
+					originalWidth = element.style('width');
+					
+					// Grab its opacity
+					originalOpacity = element.style('opacity');
+					
+					// Grab its overflow and default to visible
+					originalOverflow = element.style('overflow') || 'visible';
+					
+					// Reset the styles
+					element.style({
+						height: 0,
+						width: 0,
+						opacity: 0,
+						overflow: 'hidden'
+					});
+					
+					// Return the original height
+					return originalHeight;
+				},
+				width: function() {
+					return originalWidth;
+				},
+				opacity: function() {
+					return originalOpacity;
+				}
+			}, timeframe, easing, function() {
 				// Set the overflow to its original value
 				element.style('overflow', originalOverflow);
 				
@@ -3163,14 +3320,20 @@ Spark.extend('transitions', {
 		}
 	},
 	hide: {
-		fade: function(element, callback) {
-			// Grab its opacity
-			var original = element.style('opacity');
+		fade: function(element, timeframe, easing, callback) {
+			// Initialise any required variables
+			var original = null;
 			
 			// Fade the opacity to 0, set it back to its original
 			element.animate({
-				opacity: 0
-			}, false, false, function() {
+				opacity: function() {
+					// Get the opacity
+					original = element.style('opacity');
+					
+					// Fade to 0
+					return 0;
+				}
+			}, timeframe, easing, function() {
 				// Hide it
 				element.style('opacity', original).hide();
 				
@@ -3180,16 +3343,27 @@ Spark.extend('transitions', {
 				}
 			});
 		},
-		slide: function(element, callback) {
-			// Grab its height
-			var originalHeight = element.style('height'),
-				// Grab its overflow and default to visible
-				originalOverflow = element.style('overflow') || 'visible';
+		slide: function(element, timeframe, easing, callback) {
+			// Initialise any required variables
+			var originalHeight = null,
+				originalOverflow = null;
 			
 			// Set its overflow to hidden and slide its height to 0
-			element.style('overflow', 'hidden').animate({
-				height: 0
-			}, false, false, function() {
+			element.animate({
+				height: function() {
+					// Grab its height
+					originalHeight = element.style('height');
+					
+					// Grab its overflow and default to visible
+					originalOverflow = element.style('overflow') || 'visible';
+					
+					// Set the overflow to hidden
+					element.style('overflow', 'hidden');
+					
+					// Animate the height to 0
+					return 0;
+				}
+			}, timeframe, easing, function() {
 				element.style({
 					// Set everything back to their defaults and hide it
 					height: originalHeight,
@@ -3202,22 +3376,34 @@ Spark.extend('transitions', {
 				}
 			});
 		},
-		smooth: function(element, callback) {
-			// Grab its height
-			var originalHeight = element.style('height'),
-				// Grab its width
-				originalWidth = element.style('width'),
-				// Grab its opacity
-				originalOpacity = element.style('opacity'),
-				// Grab its overflow and default to visible
-				originalOverflow = element.style('overflow') || 'visible';
+		smooth: function(element, timeframe, easing, callback) {
+			// Initialise any required variables
+			var originalHeight = null,
+				originalWidth = null,
+				originalOpacity = null,
+				originalOverflow = null;
 			
 			// Set its overflow to hidden and animate everything to 0
 			element.style('overflow', 'hidden').animate({
-				height: 0,
+				height: function() {
+					// Grab its height
+					originalHeight = element.style('height');
+					
+					// Grab its width
+					originalWidth = element.style('width');
+					
+					// Grab its opacity
+					originalOpacity = element.style('opacity');
+					
+					// Grab its overflow and default to visible
+					originalOverflow = element.style('overflow') || 'visible';
+					
+					// Slide height to 0
+					return 0;
+				},
 				width: 0,
 				opacity: 0
-			}, false, false, function() {
+			}, timeframe, easing, function() {
 				// Set everything back to their defaults and hide it
 				element.style({
 					height: originalHeight,
@@ -3233,4 +3419,60 @@ Spark.extend('transitions', {
 			});
 		}
 	}
+});
+/**
+ * The property function is used to get or set properties.
+ * Not to be confused with attributes, if you are trying to get the value for instance attribute will get what it says in the html tag, property will get the actual value.
+ * 
+ * It takes either one or two arguments, if you pass a name and a value like so.
+ * 
+ *     $('img').property('title', 'An image');
+ * 
+ * Then it will assign 'An image' to the title property of all img tags on the page.
+ * 
+ * You can then retrieve the alt value of the first image on the page like so.
+ * 
+ *     $('img').property('title');
+ * 
+ * If you have multiple values to set then you can use an object like so.
+ * 
+ *     $('img').property({
+ *         alt: 'An image',
+ *         title: 'Image title'
+ *     });
+ * 
+ * @param {String|Object} name Either an object of properties or the name of the required property
+ * @param {String} value The value to assign to the name if you passed a string, if not passed then it returns the value of the previous name
+ * @returns {Object|String} If you are setting it will return the Spark object for chaining, if you are getting then it will return the retrieved value
+ */
+Spark.extend('property', function(name, value) {
+	// Set up that to put this in scope
+	var that = this;
+	
+	// Check what kind of variable name is
+	if(typeof name === 'string') {
+		// Check if they passed a value
+		if(typeof value === 'string') {
+			// Loop through all elements and assign the property
+			this.each(function(e) {
+				e[name] = value;
+			});
+		}
+		else {
+			// Get the property
+			return this[0][name];
+		}
+	}
+	else if(typeof name === 'object') {
+		// Loop through all the properties
+		this.each(function(v, n) {
+			// Loop through all elements and assign the property
+			that.each(function(e) {
+				e[n] = v;
+			});
+		}, name);
+	}
+	
+	// Return the Spark object to allow chaining
+	return this;
 });
