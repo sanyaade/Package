@@ -1217,7 +1217,8 @@ Spark.extend('data', function(name, data) {
 	
 	// Check that we have an element to work with
 	if(this.elements instanceof Array) {
-		if(typeof this.elements[0] === 'object') {
+		// Make sure we have some elements
+		if(this.length !== 0) {
 			// Grab the element
 			e = this.elements[0];
 			
@@ -1309,8 +1310,15 @@ Spark.extend('attribute', function(name, value) {
 			});
 		}
 		else {
-			// Get the attribute
-			return this[0].getAttribute(name);
+			// Make sure we have some elements
+			if(this.length !== 0) {
+				// Get the attribute
+				return this[0].getAttribute(name);
+			}
+			else {
+				// Return false because we have no elements
+				return false;
+			}
 		}
 	}
 	else if(typeof name === 'object') {
@@ -1492,28 +1500,35 @@ Spark.extend('style', function(name, value) {
 			}
 		}
 		else {
-			if(name === 'padding' || name === 'margin') {
-				// Get the direction styles
-				directions = [
-					getStyle(this[0], camelStyle(name + 'Top')),
-					getStyle(this[0], camelStyle(name + 'Bottom')),
-					getStyle(this[0], camelStyle(name + 'Left'))
-				];
-				
-				// Loop through the styles
-				for(i = 1; i < 2; i++) {
-					// Compare
-					if(directions[0] !== directions[i]) {
-						return '';
+			// Make sure we have some elements
+			if(this.length !== 0) {
+				if(name === 'padding' || name === 'margin') {
+					// Get the direction styles
+					directions = [
+						getStyle(this[0], camelStyle(name + 'Top')),
+						getStyle(this[0], camelStyle(name + 'Bottom')),
+						getStyle(this[0], camelStyle(name + 'Left'))
+					];
+					
+					// Loop through the styles
+					for(i = 1; i < 2; i++) {
+						// Compare
+						if(directions[0] !== directions[i]) {
+							return '';
+						}
 					}
+					
+					// They match, return one of them
+					return directions[0];
 				}
-				
-				// They match, return one of them
-				return directions[0];
+				else {
+					// Get the style
+					return getStyle(this[0], camelStyle(name));
+				}
 			}
 			else {
-				// Get the style
-				return getStyle(this[0], camelStyle(name));
+				// Return false because we have no elements
+				return false;
 			}
 		}
 	}
@@ -1683,10 +1698,23 @@ Spark.extend('json', {
  */
 Spark.extend('hasClass', function(name) {
 	// Initialise any required variables
-	var e = this[0],
+	var e = null,
 		found = true,
-		element = this.find(e),
+		element = null,
 		type = null;
+	
+	// Make sure we have some elements
+	if(this.length !== 0) {
+		// Get the first element
+		e = this[0];
+		
+		// Put it in an instance
+		element = this.find(e);
+	}
+	else {
+		// We have nothing, return false
+		return false;
+	}
 	
 	// Get the type
 	type = element.attribute('class') ? 'class' : 'className';
@@ -2223,7 +2251,15 @@ Spark.extend('load', function(file) {
 Spark.extend('html', function(content, append) {
 	// Check if they just want the innerHTML
 	if(typeof content === 'undefined') {
-		return this[0].innerHTML;
+		// Make sure we have some elements
+		if(this.length !== 0) {
+			// Return the innerHTML
+			return this[0].innerHTML;
+		}
+		else {
+			// Return false because we have no elements
+			return false;
+		}
 	}
 	
 	// Loop through all the elements
@@ -2257,7 +2293,14 @@ Spark.extend('text', function(content, append) {
 	
 	// Check if they just want the text
 	if(typeof content === 'undefined') {
-		return this[0][type];
+		// Make sure we have some elements
+		if(this.length !== 0) {
+			return this[0][type];
+		}
+		else {
+			// Return false because we have no elements
+			return false;
+		}
 	}
 	
 	// Loop through all the elements
@@ -3459,8 +3502,15 @@ Spark.extend('property', function(name, value) {
 			});
 		}
 		else {
-			// Get the property
-			return this[0][name];
+			// Make sure we have some elements
+			if(this.length !== 0) {
+				// Get the property
+				return this[0][name];
+			}
+			else {
+				// Return false because we have no elements
+				return false;
+			}
 		}
 	}
 	else if(typeof name === 'object') {
